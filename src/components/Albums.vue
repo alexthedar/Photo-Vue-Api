@@ -2,7 +2,9 @@
   <div id="albums">
 
       <div class="my"  >
-        <div v-for="(album, index) in userAlbums" v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']" @click='albumSelected(album.id)'>
+        <div v-for="(album, index) in userAlbums"
+              v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
+              @click='albumSelected(album.id, index)'>
             <div class="card-image">
               <figure class="image is-4by3">
                 <img src="http://placehold.it/600/92c952" alt="Image">
@@ -16,46 +18,47 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
-      </div>
 
+        <button @click="buttonClick" class="mobile-album-button button is-fullwidth" type="button">
+          Albums
+        </button>
+        <div v-for="(album, index) in userAlbums"
+              @click='albumSelected(album.id, index)'>
+
+        <div class="box dropdown has-text-centered" v-bind:class="{'is-open': toggleDropdown }">
+
+          {{album.title}}
+        </div>
+          <!-- <div class="box dropdown">
+            {{album.title}}
+          </div> -->
+        </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-
+// const button = document.querySelector('.button');
+// const dropdown = document.querySelector('.dropdown');
+// button.addEventListener('click', () => {
+//   dropdown.classList.toggle('is-open');
+// });
 export default {
   name: 'albums',
-  props: ['userAlbums'],
+  props: ['userAlbums', 'isMobile'],
   components: {
   },
   data: function() {
     return {
-      windowWidth: 0,
-      isMobile: false,
-      photos: []
+      photos: [],
+      album: {},
+      toggleDropdown: false
     }
   },
   methods: {
-
-    getWindowWidth(event) {
-      this.windowWidth = document.documentElement.clientWidth;
-    },
-    getWindowHeight(event) {
-      this.windowHeight = document.documentElement.clientHeight;
-    },
-    beforeDestroy() {
-      window.removeEventListener('resize', this.getWindowWidth);
-    },
-    screenIsMobile (windowWidth){
-      if(windowWidth < 768 ){
-        this.isMobile = true
-      } else {
-        this.isMobile = false
-      }
-    },
     getPhotos() {
       axios.get('https://jsonplaceholder.typicode.com/photos')
       .then(res => {
@@ -71,29 +74,21 @@ export default {
       // var photos = this.photos[albumId-1].photos
       Math.floor(Math.random() * 6) + 1
     },
-    albumSelected(id){
-      this.album === id? this.album = '' : this.album = id;
+    albumSelected(id, index){
+      // console.log(id, this.userAlbums[index])
+      this.album = this.userAlbums[index]
+      // this.album.id === id? this.album = '' : this.album = id;
       var albumPhotos = this.photos[id-1].photos
       this.$emit('albumChanged', albumPhotos)
+    },
+    buttonClick (){
+      this.toggleDropdown = !this.toggleDropdown
     }
   },
-  mounted() {
-    this.$nextTick(function() {
-      window.addEventListener('resize', this.getWindowWidth);
-      //Init
-      this.getWindowWidth()
-      this.getPhotos()
-    })
-  },
-  created: function(){
-    this.screenIsMobile(this.windowWidth);
-    console.log(this.photos)
-  },
-  watch: {
-    windowWidth: function(val){
-      this.screenIsMobile(val);
-    }
+  created() {
+    this.getPhotos()
   }
+
 }
 
 </script>
@@ -112,9 +107,32 @@ export default {
   width: 33.333%;
   padding: 1em;
 }
-/*.item-mobile {
-width: 33.33%;
-padding: 1em;
-}*/
+.dropdown {
+  box-shadow: 0 0 2px #777;
+  display: none;
+  padding: 1em;
+  margin: 0;
+  line-height: 1em;
+  border-radius: 0;
+  /*left: 0;*/
+  /*position: absolute;*/
+  /*top: 100%;*/
+  z-index: 1000;
+}
+.dropdown.is-open {
+  display: block;
+}
+.dropdown.is-open:hover {
+      color: #00d1b2;
+}
+.mobile-album-button{
+  line-height: 1em;
+  border-radius: 0;
+  border: 1px solid #ccc;
 
+
+}
+.mobile-album-button{
+  color: #00d1b2;
+}
 </style>

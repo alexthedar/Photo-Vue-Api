@@ -18,6 +18,10 @@
           </div>
         </a>
       </div>
+      <div class="nav-item has-icon">
+        <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+
+      </div>
 
       <!-- Mobile dropdown Icon -->
       <span @click="showMenu" class="nav-toggle">
@@ -27,8 +31,12 @@
       </span>
 
       <!-- Mobile dropdown -->
-      <div v-bind:class="{'is-active': isActive }" class="nav-right nav-menu ">
-        <div @click='userSelected(user.user)' v-for="(user, index) in users" class="has-text-centered nav-item  is-hidden-tablet">
+      <div v-bind:class="{'is-active': isActive }"
+          @click="showMenu"
+          class="nav-right nav-menu ">
+        <div @click='userSelected(user.user)'
+            v-for="(user, index) in users"
+            class="has-text-centered nav-item  is-hidden-tablet">
           <a class=" ">{{user.user}}</a>
         </div>
       </div>

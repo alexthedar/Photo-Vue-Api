@@ -1,64 +1,75 @@
 <template>
-  <div id="photos">
-    <!-- <div class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <p class="image is-4by3">
-          <img src="http://bulma.io/images/placeholders/1280x960.png">
-        </p>
-      </div>
-      <button class="modal-close"></button>
-    </div> -->
+    <div id="photos">
+<h1>photos</h1>
+        <div class="my"  >
+          <div v-for="(photo, index) in albumPhotos"
+                v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
+                @click='photoSelected(photo.id)'>
+              <div class="card-image">
+                <figure class="image is-4by3">
+                  <img :src="photo.url" alt="Image">
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    {{photo.id}}
+                    <p class="title has-text-centered is-5">{{photo.title}}</p>
+                    <p>{{photo}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
 
-    <carousel
-            :next-html="<i class='fa fa-arrow-right' aria-hidden='true'></i>"
-            :auto="0"
-            :mouse-drag="true"
-            :dots="true"
-            :watch-items="list">
-        <carousel-item v-for="(item, index) in list">
-            <p>CarouselItem{{index}}, URL is {{item.url}}</p>
-            <img :src="item.url">
+    </div>
 
-        </carousel-item>
-
-        <div slot="before">Insert node before</div>
-        <div slot="after">Insert node after</div>
-    </carousel>
-
-    <button @click="make(albumPhotos)"></button>
-      {{albumPhotos}}
-  </div>
 </template>
 
 <script>
-import { Carousel, CarouselItem } from '../../node_modules/vue-l-carousel'
 
   export default {
     name: 'photos',
-    props: ['albumPhotos'],
+    props: ['albumPhotos', 'isMobile'],
     data() {
         return {
-            auto: 3000,
-            list: []
+          photoUrls:[]
         }
     },
     components: {
-        'carousel': Carousel,
-        'carousel-item': CarouselItem
     },
     methods: {
-      make(albumPhotos){
+      makeImagesArr(albumPhotos){
         for(var i = 0; i < albumPhotos.length; i++){
-          this.list.push({url: albumPhotos[i].url})
+          this.photoUrls.push({url: albumPhotos[i].url})
         }
-        console.log(this.list)
+      }
+    },
+    watch: {
+      albumPhotos: function (val){
+        this.makeImagesArr(val)
       }
     }
 
   }
 </script>
 
-<style>
+<style scoped>
+.my{
+  display: flex;
+  flex-wrap: wrap;
+}
+.is-mobile {
+  width: 100%;
+  padding-top: 1em;
+}
+.is-desktop {
+  width: 33.333%;
+  padding: 1em;
+}
+/*.item-mobile {
+width: 33.33%;
+padding: 1em;
+}*/
 
 </style>
