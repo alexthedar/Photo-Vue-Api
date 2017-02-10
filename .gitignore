@@ -1,0 +1,85 @@
+########## prepackaged ##########
+node_modules/
+dist/
+npm-debug.log
+
+########## Self Dev ##########
+personaldev/
+
+########## JIC ##########
+.yarn
+bower_components/
+venv
+yo~
+npm-debug.log
+prepros-6.config
+
+########## Sass ##########
+.sass-cache/
+*.css.map
+
+########## Mac ##########
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+########## Extensions ##########
+*.pyc
+*.out
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.bak
+*.swp
+*.ai
+*.eps
+*.psd
+*.dll
+*.log
+
+########## Packages ##########
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+########## Images ##########
+*.jpg
+*.gif
+*.png
+*.svg
+*.ico
+
+########## Video ##########
+*.wmv
+*.mpg
+*.mpeg
+*.mp4
+*.mov
+*.flv
+*.avi
+*.ogv
+*.ogg
+*.webm
+
+########## Audio ##########
+*.wav
+*.mp3
+*.wma
+
+########## Fonts ##########
+*.eot
+*.ttf
+*.woff
