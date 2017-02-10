@@ -2,7 +2,10 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import _ from 'lodash'
 import 'bulma/css/bulma.css'
+
+
 // import router from './router'
 
 /* eslint-disable no-new */

@@ -3,98 +3,85 @@
     <div class="container">
       <div class="nav-left">
         <a class="nav-item">
-          <img src="../assets/img/brand.jpg" alt="Bulma logo">
+          <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo">
         </a>
-        <a class="nav-item is-tab is-hidden-mobile is-active">Home</a>
-        <a class="nav-item is-tab is-hidden-mobile">Features</a>
-        <a class="nav-item is-tab is-hidden-mobile">Pricing</a>
-        <a class="nav-item is-tab is-hidden-mobile">About</a>
+        <p id="nav-user-brand" class="nav-item">
+          <strong>User:&nbsp;</strong><span> {{user}}</span>
+        </p>
       </div>
-      <span class="nav-toggle">
+
+      <!-- Desktop centered -->
+      <div class="nav-center">
+        <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
+          <div>
+            <a class="">{{user.user}}</a>
+          </div>
+        </a>
+      </div>
+
+      <!-- Mobile dropdown Icon -->
+      <span @click="showMenu" class="nav-toggle">
         <span></span>
         <span></span>
         <span></span>
       </span>
-      <div class="nav-right nav-menu">
-        <a class="nav-item is-tab is-hidden-tablet is-active">Home</a>
-        <a class="nav-item is-tab is-hidden-tablet">Features</a>
-        <a class="nav-item is-tab is-hidden-tablet">Pricing</a>
-        <a class="nav-item is-tab is-hidden-tablet">About</a>
-        <a class="nav-item is-tab">
-          <figure class="image is-16x16" style="margin-right: 8px;">
-            <img src="http://bulma.io/images/jgthms.png">
-          </figure>
-          Profile
-        </a>
-        <a class="nav-item is-tab">Log out</a>
+
+      <!-- Mobile dropdown -->
+      <div v-bind:class="{'is-active': isActive }" class="nav-right nav-menu ">
+        <div @click='userSelected(user.user)' v-for="(user, index) in users" class="has-text-centered nav-item  is-hidden-tablet">
+          <a class=" ">{{user.user}}</a>
+        </div>
       </div>
+
     </div>
   </nav>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'navbar',
   props: ['windowWidth'],
   data (){
     return {
-      isMobile: false,
-      isActive: false
+      isActive: false,
+      users: [],
+      user: ''
     }
   },
-  components: {
-  },
   methods: {
-    screenIsMobile (windowWidth){
-      if(windowWidth < 768 ){
-        this.isMobile = true
-      } else {
-        this.isMobile = false
-      }
-    },
     showMenu(){
       this.isActive = !this.isActive
     },
-  },
-  created: function(){
-    this.screenIsMobile(this.windowWidth);
-  },
-  watch: {
-    windowWidth: function(val){
-      this.screenIsMobile(val);
+    getUsers() {
+      axios.get('https://jsonplaceholder.typicode.com/albums')
+      .then(res => {
+        this.users = _(res.data)
+        .groupBy(x => x.userId)
+        .map((value, key) => ({user: key, albums: value}))
+        .value();
+      }, (err) => {
+        console.log(err)
+      })
+    },
+    userSelected(id){
+      this.user === id? this.user = '' : this.user = id;
+      var userAlbums = this.users[id-1].albums
+      this.$emit('userChanged', userAlbums)
     }
+  },
+  created: function (){
+    this.users = this.getUsers();
   }
 }
 </script>
 
 <style scoped>
-
-#mobile-menu-icon:hover {
-  display: inline-block;
+#nav-user-brand {
+  font-size: 200%;
 }
-
-
-#menu-icon {
-display: inline-block;
-}
-nav ul, nav:active ul {
-  display: none;
-  z-index: 1000;
-  position: absolute;
-  background: #6991ac;
-  padding: 20px;
-  right: 20px;
-  top: 60px;
-  border: 1px solid #fff;
-  border-radius: 10px 0 10px 10px;
-  width: 50%
-}
-nav:hover ul {
-  display: block;
-}
-nav li {
-  text-align: center;
-  width: 100%;
-  padding: 10px 0;
+#nav-user-brand span {
+  color: red;
 }
 </style>

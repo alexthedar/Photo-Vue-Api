@@ -1,23 +1,30 @@
 <template>
   <div class="container ">
-    Mainbody
-    <Users></Users>
-    <Albums></Albums>
-    <Photos></Photos>
+    <Albums v-bind:userAlbums="userAlbums" v-on:albumChanged="albumChanged"></Albums>
+    <Photos v-bind:albumChanged="albumChanged"></Photos>
   </div>
 </template>
 
 <script>
-import Users from './Users.vue'
 import Albums from './Albums.vue'
 import Photos from './Photos.vue'
 
 export default {
   name: 'app',
+  props: ['userAlbums'],
+  data () {
+    return {
+      albumId:''
+    }
+  },
   components: {
-    Users,
     Albums,
     Photos
+  },
+  methods: {
+    albumChanged: function (albumId) {
+      this.albumId = albumId
+    }
   }
 }
 </script>
