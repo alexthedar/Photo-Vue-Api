@@ -1,5 +1,21 @@
 <template>
   <div id="albums">
+    <!-- <header class="nav">
+      <button @click="buttonClick" class=" button is-fullwidth" type="button">
+        Albums
+      </button>
+      <div v-for="(album, index) in userAlbums"
+            @click='albumSelected(album.id, index)'>
+
+      <div class="box dropdown has-text-centered" v-bind:class="{'is-open': toggleDropdown }">
+
+        {{album.title}}
+      </div>
+
+      </div>
+
+
+    </header> -->
 
       <div class="my"  >
         <div v-for="(album, index) in userAlbums"
@@ -22,20 +38,6 @@
           </div>
         </div>
 
-        <button @click="buttonClick" class="mobile-album-button button is-fullwidth" type="button">
-          Albums
-        </button>
-        <div v-for="(album, index) in userAlbums"
-              @click='albumSelected(album.id, index)'>
-
-        <div class="box dropdown has-text-centered" v-bind:class="{'is-open': toggleDropdown }">
-
-          {{album.title}}
-        </div>
-          <!-- <div class="box dropdown">
-            {{album.title}}
-          </div> -->
-        </div>
   </div>
 </template>
 
@@ -80,6 +82,7 @@ export default {
       // this.album.id === id? this.album = '' : this.album = id;
       var albumPhotos = this.photos[id-1].photos
       this.$emit('albumChanged', albumPhotos)
+      this.$emit('albumSelected', this.album)
     },
     buttonClick (){
       this.toggleDropdown = !this.toggleDropdown

@@ -3,37 +3,48 @@
     <div class="container">
       <div class="nav-left">
         <a class="nav-item">
-          <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo">
+          <!-- <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo"> -->
+          <p v-if="user" id="nav-user-brand" >
+            <strong>User:&nbsp;</strong><span> {{user}}</span>
+          </p>
         </a>
-        <p id="nav-user-brand" class="nav-item">
-          <strong>User:&nbsp;</strong><span> {{user}}</span>
-        </p>
+        <!-- TODO: fix album title to display with word wrap -->
+        <div class="nav-item">
+          <p v-if="hasAlbum"  >
+            <strong>&nbsp;&nbsp;Album:&nbsp;</strong>
+            <span> {{album.title}}</span>
+          </p>
+        </div>
       </div>
 
-      <!-- Desktop centered -->
-      <div class="nav-center">
+      <!-- Desktop users -->
+      <div class="nav-right">
+        <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon">
+          <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+        </div>
+
+        <p class="nav-item is-tab is-unselectable is-hidden-mobile">
+          <i class="icon fa fa-users" aria-hidden="true"></i>
+        </p>
         <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
           <div>
             <a class="">{{user.user}}</a>
           </div>
         </a>
       </div>
-      <div class="nav-item has-icon">
-        <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
 
+      <!-- left nav icons -->
+      <div v-if="isMobile && hasAlbum" @click="showAlbums" class="nav-item has-icon">
+        <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+      </div>
+      <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
+        <i class="icon fa fa-users" aria-hidden="true"></i>
       </div>
 
-      <!-- Mobile dropdown Icon -->
-      <span @click="showMenu" class="nav-toggle">
-        <span></span>
-        <span></span>
-        <span></span>
-      </span>
-
-      <!-- Mobile dropdown -->
-      <div v-bind:class="{'is-active': isActive }"
-          @click="showMenu"
-          class="nav-right nav-menu ">
+      <!-- User Mobile dropdown -->
+      <div v-bind:class="{'is-active': userMenu }"
+          @click="showUsers"
+          class=" nav-menu ">
         <div @click='userSelected(user.user)'
             v-for="(user, index) in users"
             class="has-text-centered nav-item  is-hidden-tablet">
@@ -41,26 +52,57 @@
         </div>
       </div>
 
+        <!-- <div v-bind:class="{'is-active': albumMenu }"
+            @click="showAlbums"
+            class=" is-active nav-menu ">
+          <div v-for="album in userAlbums"
+              class="has-text-centered nav-item  is-hidden-tablet">
+            {{album.title}}
+          </div>
+        </div> -->
+        <!-- <div @click='userSelected(user.user)'
+            v-for="(user, index) in users"
+            class="has-text-centered nav-item  is-hidden-tablet">
+          <a class=" ">{{user.user}}</a>
+        </div> -->
+
     </div>
   </nav>
 </template>
 
 <script>
 import axios from 'axios'
+console.log('user',this.userMenu, 'album', this.albumMenu)
 
 export default {
   name: 'navbar',
-  props: ['windowWidth'],
+  props: ['isMobile', 'album'],
   data (){
     return {
-      isActive: false,
+      userMenu: false,
+      albumMenu: false,
+      isTest: true,
       users: [],
-      user: ''
+      user: '',
+      userAlbums:[],
+      hasAlbum: false
     }
   },
   methods: {
-    showMenu(){
-      this.isActive = !this.isActive
+    showUsers(){
+
+      // this.userMenu = !this.userMenu
+      this.userMenu === false ? this.userMenu = true : this.userMenu = false;
+      this.albumMenu === true ? this.albumMenu = false : this.albumMenu = false;
+      console.log('user',this.userMenu, 'album', this.albumMenu)
+    },
+    showAlbums(){
+      // this.userMenu = false
+      // this.albumMenu = !this.albumMenu
+      this.albumMenu === false ? this.albumMenu = true : this.albumMenu = false;
+      this.userMenu === true ? this.userMenu = false : this.userMenu = false;
+
+      console.log('user',this.userMenu, 'album', this.albumMenu)
     },
     getUsers() {
       axios.get('https://jsonplaceholder.typicode.com/albums')
@@ -70,26 +112,46 @@ export default {
         .map((value, key) => ({user: key, albums: value}))
         .value();
       }, (err) => {
-        console.log(err)
+        console.log('error:' ,err)
       })
     },
     userSelected(id){
       this.user === id? this.user = '' : this.user = id;
-      var userAlbums = this.users[id-1].albums
-      this.$emit('userChanged', userAlbums)
+      this.userAlbums = this.users[id-1].albums
+      this.albumMenu = false
+      this.hasAlbum = false
+      this.$emit('userChanged', this.userAlbums)
+    },
+    albumSelected(album){
+      this.hasAlbum = _.values(album).some(x => x !== undefined); // true
     }
   },
   created: function (){
     this.users = this.getUsers();
+    this.albumSelected(this.album);
+  },
+  watch: {
+    album: function (val){
+      this.albumSelected(val);
+    }
   }
+
 }
 </script>
 
 <style scoped>
 #nav-user-brand {
-  font-size: 200%;
+  font-size: 125%;
+  padding: 0;
+  margin: 0;
 }
 #nav-user-brand span {
   color: red;
 }
+/*#nav-album {
+  font-size: 80%;
+}
+#nav-album span {
+  color: red;
+}*/
 </style>
