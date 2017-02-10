@@ -9,62 +9,53 @@
       </div>
       <button class="modal-close"></button>
     </div> -->
-        <p>
-          <a @click="prev">Previous</a> || <a @click="next">Next</a>
-        </p>
 
-        <div
-           v-for="number in [currentNumber]"
-           transition="fade"
-           >
-        <img
-             :src="albumPhotos[Math.abs(currentNumber) % albumPhotos.length].url"
-             v-on:mouseover="stopRotation"
-             v-on:mouseout="startRotation"
-             />
-      </div>
+    <carousel
+            :next-html="<i class='fa fa-arrow-right' aria-hidden='true'></i>"
+            :auto="0"
+            :mouse-drag="true"
+            :dots="true"
+            :watch-items="list">
+        <carousel-item v-for="(item, index) in list">
+            <p>CarouselItem{{index}}, URL is {{item.url}}</p>
+            <img :src="item.url">
+
+        </carousel-item>
+
+        <div slot="before">Insert node before</div>
+        <div slot="after">Insert node after</div>
+    </carousel>
+
+    <button @click="make(albumPhotos)"></button>
       {{albumPhotos}}
   </div>
 </template>
 
 <script>
-import { Carousel, Slide } from 'vue-carousel';
+import { Carousel, CarouselItem } from '../../node_modules/vue-l-carousel'
 
   export default {
     name: 'photos',
     props: ['albumPhotos'],
+    data() {
+        return {
+            auto: 3000,
+            list: []
+        }
+    },
     components: {
-        Carousel,
-        Slide
+        'carousel': Carousel,
+        'carousel-item': CarouselItem
     },
-    data: function() {
-      return {
-        currentNumber: 0,
-        timer: null,
-        images: this.albumPhotos
+    methods: {
+      make(albumPhotos){
+        for(var i = 0; i < albumPhotos.length; i++){
+          this.list.push({url: albumPhotos[i].url})
+        }
+        console.log(this.list)
       }
-    },
-      ready: function () {
-              this.startRotation();
-          },
+    }
 
-          methods: {
-              startRotation: function() {
-                  this.timer = setInterval(this.next, 3000);
-              },
-
-              stopRotation: function() {
-                  clearTimeout(this.timer);
-                  this.timer = null;
-              },
-
-              next: function() {
-                  this.currentNumber += 1
-              },
-              prev: function() {
-                  this.currentNumber -= 1
-              }
-            }
   }
 </script>
 
