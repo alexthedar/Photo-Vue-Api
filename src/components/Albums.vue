@@ -2,8 +2,7 @@
   <div id="albums">
 
       <div class="my"  >
-        <div v-for="(album, index) in userAlbums" class="item">
-          <div class="card ">
+        <div v-for="(album, index) in userAlbums" v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']">
             <div class="card-image">
               <figure class="image is-4by3">
                 <img src="http://bulma.io/images/placeholders/1280x960.png" alt="Image">
@@ -25,6 +24,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'albums',
   props: ['userAlbums'],
@@ -34,6 +35,7 @@ export default {
     return {
       windowWidth: 0,
       isMobile: false,
+      photos: []
     }
   },
   methods: {
@@ -55,6 +57,17 @@ export default {
       } else {
         this.isMobile = false
       }
+    },
+    getPhotos() {
+      axios.get('https://jsonplaceholder.typicode.com/photos')
+      .then(res => {
+        this.photos = _(res.data)
+        .groupBy(x => x.albumId)
+        .map((value, key) => ({album: key, photos: value}))
+        .value();
+      }, (err) => {
+        console.log(err)
+      })
     }
   },
   mounted() {
@@ -66,8 +79,14 @@ export default {
   },
   created: function(){
     this.screenIsMobile(this.windowWidth);
+    this.getPhotos(this.photos)
+    console.log(this.photos)
+
   },
   watch: {
+    album: function(){
+      this.getPhotos(this.photos)
+    },
     windowWidth: function(val){
       this.screenIsMobile(val);
     }
@@ -82,7 +101,12 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-.item{
+.is-mobile {
+  width: 100%;
+  padding-top: 1em;
+}
+.is-desktop {
+  width: 33.333%;
   padding: 1em;
 }
 /*.item-mobile {
