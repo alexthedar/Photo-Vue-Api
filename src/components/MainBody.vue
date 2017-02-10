@@ -1,7 +1,7 @@
 <template>
   <div class="container ">
     <Albums v-bind:userAlbums="userAlbums" v-on:albumChanged="albumChanged"></Albums>
-    <Photos v-bind:albumChanged="albumChanged"></Photos>
+    <Photos v-bind:albumPhotos="albumPhotos"></Photos>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
   props: ['userAlbums'],
   data () {
     return {
-      albumId:''
+      albumPhotos:[]
     }
   },
   components: {
@@ -22,8 +22,8 @@ export default {
     Photos
   },
   methods: {
-    albumChanged: function (albumId) {
-      this.albumId = albumId
+    albumChanged: function (albumPhotos) {
+      this.albumPhotos = albumPhotos
     }
   }
 }

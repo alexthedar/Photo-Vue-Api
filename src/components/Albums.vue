@@ -2,15 +2,16 @@
   <div id="albums">
 
       <div class="my"  >
-        <div v-for="(album, index) in userAlbums" v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']">
+        <div v-for="(album, index) in userAlbums" v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']" @click='albumSelected(album.id)'>
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="http://bulma.io/images/placeholders/1280x960.png" alt="Image">
+                <img src="http://placehold.it/600/92c952" alt="Image">
               </figure>
             </div>
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
+                  {{album.id}}
                   <p class="title has-text-centered is-5">{{album.title}}</p>
                 </div>
               </div>
@@ -18,7 +19,6 @@
           </div>
         </div>
       </div>
-
 
   </div>
 </template>
@@ -39,9 +39,7 @@ export default {
     }
   },
   methods: {
-    albumSelected(id) {
-      this.$emit('albumChanged', id)
-    },
+
     getWindowWidth(event) {
       this.windowWidth = document.documentElement.clientWidth;
     },
@@ -68,6 +66,15 @@ export default {
       }, (err) => {
         console.log(err)
       })
+    },
+    getRandomPhoto(albumId){
+      // var photos = this.photos[albumId-1].photos
+      Math.floor(Math.random() * 6) + 1
+    },
+    albumSelected(id){
+      this.album === id? this.album = '' : this.album = id;
+      var albumPhotos = this.photos[id-1].photos
+      this.$emit('albumChanged', albumPhotos)
     }
   },
   mounted() {
@@ -75,18 +82,14 @@ export default {
       window.addEventListener('resize', this.getWindowWidth);
       //Init
       this.getWindowWidth()
+      this.getPhotos()
     })
   },
   created: function(){
     this.screenIsMobile(this.windowWidth);
-    this.getPhotos(this.photos)
     console.log(this.photos)
-
   },
   watch: {
-    album: function(){
-      this.getPhotos(this.photos)
-    },
     windowWidth: function(val){
       this.screenIsMobile(val);
     }
