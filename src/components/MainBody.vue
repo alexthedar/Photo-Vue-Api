@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="container fixed-navbar-adjust">
     <Albums v-bind:userAlbums="userAlbums"
             v-bind:isMobile="isMobile"
             v-bind:mobileAlbumSelect="mobileAlbumSelect"
@@ -8,13 +8,16 @@
     </Albums>
     <Photos v-bind:albumPhotos="albumPhotos"
             v-bind:isMobile="isMobile">
-    </Photos>
+    </Photos v-bind:isMobile="isMobile">
+    <Photo>
+    </Photo>
   </div>
 </template>
 
 <script>
 import Albums from './Albums.vue'
 import Photos from './Photos.vue'
+import Photo from './Photo.vue'
 
 export default {
   name: 'app',
@@ -26,7 +29,8 @@ export default {
   },
   components: {
     Albums,
-    Photos
+    Photos,
+    Photo
   },
   methods: {
     albumChanged: function (albumPhotos) {
@@ -39,6 +43,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

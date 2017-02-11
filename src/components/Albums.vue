@@ -1,25 +1,28 @@
 <template>
   <div id="albums">
 
-      <div class="my"  >
+    <div v-if="showUserAlbums">
+
+      <div class="my-columns"  >
         <div v-for="(album, index) in userAlbums"
-              v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
-              @click='albumSelected(album.id, index)'>
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <img :src="coverPhoto(album.id)" alt="Image">
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title has-text-centered is-5">{{album.title}}</p>
-                </div>
+            v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
+            @click='albumSelected(album.id, index)'>
+          <div class="card-image">
+            <figure class="image is-4by3">
+              <img :src="coverPhoto(album.id)" alt="Image">
+            </figure>
+          </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title has-text-centered is-5">{{album.title}}</p>
               </div>
             </div>
-
           </div>
         </div>
+      </div>
+
+    </div>
 
   </div>
 </template>
@@ -37,7 +40,7 @@ export default {
     return {
       photos: [],
       album: {},
-      toggleDropdown: false
+      showUserAlbums: false
     }
   },
   methods: {
@@ -55,11 +58,10 @@ export default {
     albumSelected(id, index){
       this.album = this.userAlbums[index]
       var albumPhotos = this.photos[id-1].photos
+      this.showUserAlbums = false;
+      console.log(this.showUserAlbums)
       this.$emit('albumChanged', albumPhotos)
       this.$emit('albumSelected', this.album)
-    },
-    buttonClick (){
-      this.toggleDropdown = !this.toggleDropdown
     },
     coverPhoto(id){
       var number = Math.floor(Math.random() * 10) + 0
@@ -68,22 +70,21 @@ export default {
   },
   created() {
     this.getPhotos()
-    console.log()
   },
   watch: {
     mobileAlbumSelect: function (val){
-      var albumPhotos = this.photos[val.id-1].photos
-      this.$emit('albumChanged', albumPhotos)
+      this.albumSelected(val.album.id, val.index)
+    },
+    userAlbums: function (val){
+      this.showUserAlbums = true;
     }
   }
-
 }
-
 </script>
 
 
 <style scoped>
-.my{
+.my-columns{
   display: flex;
   flex-wrap: wrap;
 }
@@ -95,32 +96,10 @@ export default {
   width: 33.333%;
   padding: 1em;
 }
-.dropdown {
-  box-shadow: 0 0 2px #777;
-  display: none;
-  padding: 1em;
-  margin: 0;
-  line-height: 1em;
-  border-radius: 0;
-  /*left: 0;*/
-  /*position: absolute;*/
-  /*top: 100%;*/
-  z-index: 1000;
+.is-desktop:hover {
+  filter: invert(100%);
+  /*color: #00d1b2;*/
+  border: 1px solid #FF2E4D;
 }
-.dropdown.is-open {
-  display: block;
-}
-.dropdown.is-open:hover {
-      color: #00d1b2;
-}
-.mobile-album-button{
-  line-height: 1em;
-  border-radius: 0;
-  border: 1px solid #ccc;
 
-
-}
-.mobile-album-button{
-  color: #00d1b2;
-}
 </style>

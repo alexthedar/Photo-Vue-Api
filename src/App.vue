@@ -80,6 +80,9 @@ export default {
 
 
 <style>
+.fixed-navbar-adjust{
+  padding-top: 55px
+}
 .image-cropper {
     overflow: hidden;
     border-radius: 50%;

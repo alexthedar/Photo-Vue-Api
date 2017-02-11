@@ -1,23 +1,16 @@
 <template>
     <div id="photos">
-<h1>photos</h1>
-        <div class="my"  >
+        <div class="my-columns"  >
           <div v-for="(photo, index) in albumPhotos"
                 v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
-                @click='photoSelected(photo.id)'>
+                @click='photoSelected(photo)'>
               <div class="card-image">
                 <figure class="image is-4by3">
                   <img :src="photo.url" alt="Image">
                 </figure>
               </div>
               <div class="card-content">
-                <div class="media">
-                  <div class="media-content">
-                    {{photo.id}}
-                    <p class="title has-text-centered is-5">{{photo.title}}</p>
-                    <p>{{photo}}</p>
-                  </div>
-                </div>
+                <small class="has-text-centered">{{photo.title}}</small>
               </div>
             </div>
         </div>
@@ -33,29 +26,23 @@
     props: ['albumPhotos', 'isMobile'],
     data() {
         return {
-          photoUrls:[]
         }
     },
     components: {
     },
     methods: {
-      makeImagesArr(albumPhotos){
-        for(var i = 0; i < albumPhotos.length; i++){
-          this.photoUrls.push({url: albumPhotos[i].url})
-        }
+      photoSelected(id){
+        console.log(id)
       }
     },
     watch: {
-      albumPhotos: function (val){
-        this.makeImagesArr(val)
-      }
     }
 
   }
 </script>
 
 <style scoped>
-.my{
+.my-columns{
   display: flex;
   flex-wrap: wrap;
 }
@@ -64,12 +51,12 @@
   padding-top: 1em;
 }
 .is-desktop {
-  width: 33.333%;
-  padding: 1em;
+  width: 20%;
+  padding: .25em .25em 0 .25em;
+  /*border: .1px solid #ccc;*/
 }
-/*.item-mobile {
-width: 33.33%;
-padding: 1em;
-}*/
-
+.is-desktop:hover {
+  filter: invert(100%);
+  border: 1px solid #FF2E4D;
+}
 </style>

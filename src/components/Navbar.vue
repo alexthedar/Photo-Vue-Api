@@ -1,37 +1,61 @@
 <template>
   <div>
-    <nav class="nav has-shadow">
+    <nav class="nav has-shadow is-fixed-top">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item">
-            <!-- <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo"> -->
+          <!-- TODO: fix album title to display with word wrap -->
+          <!-- <a class="nav-item">
+            <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo">
             <p v-if="user" id="nav-user-brand" >
               <strong>User:&nbsp;</strong><span> {{user}}</span>
             </p>
           </a>
-          <!-- TODO: fix album title to display with word wrap -->
           <div class="nav-item">
-            <p v-if="hasAlbum"  >
+            <p v-if="hasAlbum && !isMobile"  >
               <strong>&nbsp;&nbsp;Album:&nbsp;</strong>
               <span> {{album.title}}</span>
             </p>
-          </div>
-        </div>
-
-        <!-- Desktop users -->
-        <div class="nav-right">
-          <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon">
-            <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
-          </div>
-
+          </div> -->
+          <!-- Desktop users -->
           <p class="nav-item is-tab is-unselectable is-hidden-mobile">
-            <i class="icon fa fa-users" aria-hidden="true"></i>
+            <span v-if="!isMobile" class="title">Users</span>
+            <i v-if="isMobile" class="icon fa fa-users" aria-hidden="true"></i>
           </p>
           <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
             <div>
               <a class="">{{user.user}}</a>
             </div>
           </a>
+          <!-- Navbar break icon -->
+          <span class=" is-unselectable is-hidden-mobile">
+            <span class="icon is-large " aria-hidden="true">|</span>
+          </span>
+        </div>
+
+        <!-- Desktop -->
+        <div class="nav-right">
+
+          <!-- desktop photo -->
+          <div @click="showPhotos" v-if=" hasPhotos  && !isMobile" class="nav-item has-icon">
+            <p class="is-tab is-hidden-mobile">
+              <span v-if="!isMobile" class="title">Photos</span>
+              <i v-if="isMobile" class="fa fa-picture-o" aria-hidden="true"></i>
+            </p>
+          </div>
+
+          <!-- desktop album -->
+          <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
+            <span v-if="!isMobile" class="title">Albums</span>
+            <img v-if="isMobile" class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+
+          </div>
+
+          <!-- Navbar break icon -->
+          <span class=" is-unselectable is-hidden-mobile">
+            <span class="icon is-large " aria-hidden="true">|</span>
+          </span>
+
+
         </div>
 
         <!-- left nav icons -->
@@ -39,6 +63,8 @@
           <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
         </div>
         <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
+          <span class="icon is-medium " aria-hidden="true">|</span>
+
           <i class="icon fa fa-users" aria-hidden="true"></i>
         </div>
 
@@ -46,33 +72,59 @@
         <div v-if="isMobile" v-bind:class="{'is-active': userMenu }"
             class=" nav-menu ">
           <div @click='userSelected(user.user)'
+              v-if="userMenu"
               v-for="(user, index) in users"
               class="has-text-centered nav-item  is-hidden-tablet">
             <a class="navItem">{{user.user}}</a>
           </div>
         </div>
 
-          <div  v-bind:class="{'is-active': albumMenu }"
+        <!-- albums mobile dropdown -->
+          <div  v-if="albumMenu" v-bind:class="{'is-active': albumMenu }"
               class=" nav-menu ">
             <div v-for="(album, index) in userAlbums"
                 class="has-text-left nav-item  is-hidden-tablet"
-                @click="dropdownAlbumSelect(album)">
+                @click="dropdownAlbumSelect(album, index)">
               {{album.title}}
             </div>
           </div>
+
+        <!-- photos mobile dropdown -->
+          <div  v-if="isMobile" v-bind:class="{'is-active': photoMenu }"
+              class=" nav-menu ">
+            <div class="title has-text-centered">{{album.title}}</div>
+            <div class="has-text-left nav-item  is-hidden-tablet">
+              lksjdlasjdlaks
+            </div>
+          </div>
+
+          <!-- end container -->
       </div>
+
+
     </nav>
 
-    <!-- desktop dropdown menu -->
+    <!-- desktop album dropdown items -->
     <div  v-if="albumMenu && !isMobile" v-bind:class="{'is-active': albumMenu }"
-        class=" nav-menu "
+        class=" nav-menu fixed-navbar-adjust"
         id="album-dropdown-menu">
       <div v-for="(album, index) in userAlbums"
           class="has-text-left nav-item  desktop-dropdown-album-menu"
-          @click="dropdownAlbumSelect(album)">
+          @click="dropdownAlbumSelect(album, index)">
         {{album.title}}
       </div>
     </div>
+
+
+    <!-- desktop photo dropdown items -->
+    <!-- <div  v-if="photoMenu && !isMobile"
+          v-bind:class="{'is-active': photoMenu }"
+          class=" nav-menu fixed-navbar-adjust"
+          id="album-dropdown-menu">
+        <div class="title has-text-centered">{{album.title}}</div>
+
+    </div> -->
+
   </div>
 </template>
 
@@ -86,10 +138,12 @@ export default {
     return {
       userMenu: false,
       albumMenu: false,
+      photoMenu: true,
       users: [],
       user: '',
       userAlbums:[],
-      hasAlbum: false
+      hasAlbum: false,
+      hasPhotos: false
     }
   },
   methods: {
@@ -120,9 +174,10 @@ export default {
       this.hasAlbum = false
       this.$emit('userChanged', this.userAlbums)
     },
-    dropdownAlbumSelect(album){
+    dropdownAlbumSelect(album, index){
       this.albumMenu = false
       this.userMenu = false
+      album = {index: index, album: album}
       this.$emit('newAlbum', album)
     },
     albumSelected(album){
@@ -136,6 +191,10 @@ export default {
   watch: {
     album: function (val){
       this.albumSelected(val);
+    },
+    isMobile: function (val){
+      this.albumMenu === false
+      this.userMenu === false
     }
   }
 
@@ -156,6 +215,12 @@ export default {
 }
 .desktop-dropdown-album-menu:hover {
   color: #00d1b2;
+}
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 }
 
 </style>
