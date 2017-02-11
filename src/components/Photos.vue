@@ -1,5 +1,5 @@
 <template>
-    <div id="photos" >
+    <div id="photos" class="fixed-navbar-adjust">
         <div v-if="showUserPhotos" class="my-columns"  >
           <div v-for="(photo, index) in albumPhotos"
                 v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
@@ -61,11 +61,12 @@
 }
 .is-desktop {
   width: 20%;
-  padding: .25em .25em 0 .25em;
+  padding: .5em .25em 0 .25em;
   /*border: .1px solid #ccc;*/
 }
 .is-desktop:hover {
-  filter: invert(100%);
-  border: 1px solid #FF2E4D;
+  /*filter: invert(100%);*/
+  border: 1px solid #00d1b2;
+  background: #f5f5f5
 }
 </style>

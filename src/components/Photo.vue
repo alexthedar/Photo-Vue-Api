@@ -1,6 +1,5 @@
 <template>
   <div id="photo-template" >
-    {{photoObj}}
 
     <div v-if="showPhoto" >
       <div class="card-content">

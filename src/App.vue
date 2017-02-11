@@ -4,7 +4,7 @@
             v-on:newAlbum="newAlbum"
             v-bind:isMobile="isMobile"
             v-bind:album="album"
-            v-bind:photoSelected="photoSelected">
+            v-bind:photo="photo">
     </Navbar>
     <MainBody v-bind:userAlbums="userAlbums"
               v-bind:isMobile="isMobile"
@@ -31,7 +31,8 @@ export default {
       windowWidth: 0,
       isMobile: false,
       album: {},
-      mobileAlbumSelect:{}
+      mobileAlbumSelect:{},
+      photo: {}
     }
   },
   methods: {
@@ -46,7 +47,8 @@ export default {
       this.userAlbums = userAlbums
     },
     photoSelected: function (photo) {
-      this.$emit('photoSelected', photo)
+      this.photo = photo
+      console.log(this.photo)
     },
     getWindowWidth(event) {
       this.windowWidth = document.documentElement.clientWidth;
@@ -86,7 +88,7 @@ export default {
 
 <style>
 .fixed-navbar-adjust{
-  padding-top: 55px
+  margin-top: 49px
 }
 .image-cropper {
     overflow: hidden;

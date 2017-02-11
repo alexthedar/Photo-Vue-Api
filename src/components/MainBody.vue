@@ -44,8 +44,8 @@ export default {
     },
     photoSelected: function (photo) {
       this.photoObj = photo
-      console.log(this.photoObj)
-      // this.$emit('photoSelected', photo)
+      // console.log(this.photoObj)
+      this.$emit('photoSelected', photo)
     }
   }
 }

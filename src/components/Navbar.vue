@@ -1,8 +1,7 @@
 <template>
   <div>
+    <div class="container">
     <nav class="nav has-shadow is-fixed-top">
-      <div class="container">
-
         <!-- Desktop users  -->
         <div class="nav-left">
           <p class="nav-item is-tab is-unselectable is-hidden-mobile">
@@ -11,7 +10,7 @@
           </p>
           <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
             <div>
-              <a class="">{{user.user}}</a>
+              <a class="text-color">{{user.user}}</a>
             </div>
           </a>
         </div>
@@ -60,63 +59,33 @@
         </div>
         <!-- End Desktop Album & Photos icons -->
 
-        <!-- Mobile DropDown Menus (in navbar)-->
-        <!-- User Mobile dropdown -->
-        <div v-if="isMobile" v-bind:class="{'is-active': userMenu }"
-            class=" nav-menu ">
+        <!-- User Mobile dropdown  -->
+        <div v-if=" isMobile" v-bind:class="{'is-active': userMenu }"
+              class=" dropdown-menu nav-menu is-active   ">
           <div @click='userSelected(user.user)'
-              v-if="userMenu"
-              v-for="(user, index) in users"
-              class="has-text-centered nav-item  is-hidden-tablet">
-            <a class="navItem">{{user.user}}</a>
+                v-if="userMenu"
+                v-for="(user, index) in users"
+                class="nav-item  dropdown-menu-items   is-hidden-tablet">
+            <a class="">{{user.user}}</a>
           </div>
         </div>
+        <!-- end container -->
+      </div>
 
         <!-- albums mobile dropdown -->
-          <div  v-if="albumMenu" v-bind:class="{'is-active': albumMenu }"
-              class=" nav-menu ">
+          <nav v-if="albumMenu" v-bind:class="{'is-active': albumMenu }"
+              class=" dropdown-menu nav-menu is-active  fixed-navbar-adjust">
+            <div class=" has-text-centered dropdown-menu-header ">
+              User <span>{{user}}</span> Albums
+            </div>
             <div v-for="(album, index) in userAlbums"
-                class="has-text-left nav-item  is-hidden-tablet"
+                class="has-text-left nav-item  dropdown-menu-items is-fullwidth"
                 @click="dropdownAlbumSelect(album, index)">
               {{album.title}}
             </div>
-          </div>
-
-        <!-- photos mobile dropdown -->
-          <!-- <div  v-if="isMobile" v-bind:class="{'is-active': photoMenu }"
-              class=" nav-menu ">
-            <div class="title has-text-centered">{{album.title}}</div>
-            <div class="has-text-left nav-item  is-hidden-tablet">
-              lksjdlasjdlaks
-            </div>
-          </div> -->
-          <!-- End Mobile DropDown Menus (in navbar)-->
-
-          <!-- end container -->
-      </div>
+          </nav>
       <!-- end navbar -->
     </nav>
-
-    <!-- Desktop Dropdown Menus (below navbar)-->
-    <!-- desktop album dropdown items -->
-    <div  v-if="albumMenu && !isMobile" v-bind:class="{'is-active': albumMenu }"
-        class=" nav-menu fixed-navbar-adjust"
-        id="album-dropdown-menu">
-      <div v-for="(album, index) in userAlbums"
-          class="has-text-left nav-item  desktop-dropdown-album-menu"
-          @click="dropdownAlbumSelect(album, index)">
-        {{album.title}}
-      </div>
-    </div>
-
-    <!-- desktop photo dropdown items -->
-    <!-- <div  v-if="photoMenu && !isMobile"
-          v-bind:class="{'is-active': photoMenu }"
-          class=" nav-menu fixed-navbar-adjust"
-          id="album-dropdown-menu">
-        <div class="title has-text-centered">{{album.title}}</div>
-
-    </div> -->
 
   </div>
 </template>
@@ -126,7 +95,7 @@ import axios from 'axios'
 
 export default {
   name: 'navbar',
-  props: ['isMobile', 'album'],
+  props: ['isMobile', 'album', 'photo'],
   data (){
     return {
       userMenu: false,
@@ -136,7 +105,8 @@ export default {
       user: '',
       userAlbums:[],
       hasAlbum: false,
-      hasPhotos: false
+      hasPhotos: false,
+      photoObj: {}
     }
   },
   methods: {
@@ -187,11 +157,15 @@ export default {
   },
   watch: {
     album: function (val){
-      this.albumSelected(val);
+      this.hasAlbum = true
+      // this.albumSelected(val);
     },
     isMobile: function (val){
       this.albumMenu === false
       this.userMenu === false
+    },
+    photo: function (val){
+      this.photoObj = val
     }
   }
 
@@ -199,19 +173,29 @@ export default {
 </script>
 
 <style scoped>
-#nav-user-brand {
-  font-size: 125%;
-  padding: 0;
-  margin: 0;
-}
-#nav-user-brand span {
-  color: red;
-}
-.desktop-dropdown-album-menu{
+
+.dropdown-menu {
+  z-index: 3000;
+  border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
-.desktop-dropdown-album-menu:hover {
+.dropdown-menu-items {
+  line-height: 1em;
+  padding: 1em;
+  background: #fff;
+  border-top: 1px solid #ccc;
+}
+.dropdown-menu-header {
+  font-size: 200%;
+  background: #ccc;
+}
+.dropdown-menu-header span {
+  color: red;
+}
+
+.dropdown-menu-items:hover {
   color: #00d1b2;
+  background: #f5f5f5
 }
 nav {
   position: fixed;
@@ -219,5 +203,11 @@ nav {
   left: 0;
   right: 0;
 }
+.nav-item a.is-tab:hover, a.nav-item.is-tab:hover {
+  background: #f5f5f5;
+}
+.text-color:hover {
+  color: #00d1b2;
 
+}
 </style>

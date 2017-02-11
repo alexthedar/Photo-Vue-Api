@@ -1,5 +1,5 @@
 <template>
-  <div id="albums" >
+  <div id="albums" class="fixed-navbar-adjust">
 
     <div v-if="showUserAlbums">
 
@@ -96,9 +96,9 @@ export default {
   padding: 1em;
 }
 .is-desktop:hover {
-  filter: invert(100%);
-  /*color: #00d1b2;*/
-  border: 1px solid #FF2E4D;
+  /*filter: invert(100%);*/
+  background: #f5f5f5;
+  border: 1px solid #00d1b2;
 }
 
 </style>
