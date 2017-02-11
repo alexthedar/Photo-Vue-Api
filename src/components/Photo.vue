@@ -1,40 +1,36 @@
 <template>
-    <div id="photos">
-        <div class="my"  >
-          <div >
-              <div class="card-image">
-                <figure class="image is-4by3">
-                  <img src="http://lorempixel.com/400/400/cats" alt="Image">
-                </figure>
-              </div>
-              <div class="card-content">
-                <small class="has-text-centered">stuff</small>
-              </div>
-            </div>
-        </div>
+  <div id="photo-template" >
+    {{photoObj}}
 
+    <div v-if="showPhoto" >
+      <div class="card-content">
+        <div class="title has-text-centered">{{photoObj.title}}</div>
+      </div>
+      <div class="card-image">
+        <figure class="image is-square">
+          <img :src="photoObj.url" alt="Image">
+        </figure>
+      </div>
     </div>
 
+  </div>
 </template>
 
 <script>
 
   export default {
-    name: 'photos',
-    props: ['', ''],
+    name: 'photo-template',
+    props: ['isMobile', 'photoObj'],
     data() {
         return {
+          showPhoto: false
         }
     },
-    components: {
-    },
-    methods: {
-
-    },
     watch: {
-
+      photoObj: function (val){
+        this.showPhoto = true;
+      }
     }
-
   }
 </script>
 

@@ -7,9 +7,11 @@
             v-on:albumSelected="albumSelected">
     </Albums>
     <Photos v-bind:albumPhotos="albumPhotos"
-            v-bind:isMobile="isMobile">
-    </Photos v-bind:isMobile="isMobile">
-    <Photo>
+            v-bind:isMobile="isMobile"
+            v-on:photoSelected="photoSelected">
+    </Photos >
+    <Photo v-bind:isMobile="isMobile"
+            v-bind:photoObj="photoObj">
     </Photo>
   </div>
 </template>
@@ -24,7 +26,8 @@ export default {
   props: ['userAlbums', 'isMobile', 'mobileAlbumSelect'],
   data () {
     return {
-      albumPhotos:[]
+      albumPhotos:[],
+      photoObj:{}
     }
   },
   components: {
@@ -38,6 +41,11 @@ export default {
     },
     albumSelected: function (album) {
       this.$emit('albumSelected', album)
+    },
+    photoSelected: function (photo) {
+      this.photoObj = photo
+      console.log(this.photoObj)
+      // this.$emit('photoSelected', photo)
     }
   }
 }

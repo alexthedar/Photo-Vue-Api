@@ -3,12 +3,14 @@
     <Navbar v-on:userChanged="userChanged"
             v-on:newAlbum="newAlbum"
             v-bind:isMobile="isMobile"
-            v-bind:album="album">
+            v-bind:album="album"
+            v-bind:photoSelected="photoSelected">
     </Navbar>
     <MainBody v-bind:userAlbums="userAlbums"
               v-bind:isMobile="isMobile"
               v-bind:mobileAlbumSelect="mobileAlbumSelect"
-              v-on:albumSelected="albumSelected">
+              v-on:albumSelected="albumSelected"
+              v-on:photoSelected="photoSelected">
     </MainBody>
   </div>
 </template>
@@ -42,6 +44,9 @@ export default {
     },
     userChanged: function (userAlbums) {
       this.userAlbums = userAlbums
+    },
+    photoSelected: function (photo) {
+      this.$emit('photoSelected', photo)
     },
     getWindowWidth(event) {
       this.windowWidth = document.documentElement.clientWidth;

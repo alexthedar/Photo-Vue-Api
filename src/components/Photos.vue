@@ -1,11 +1,11 @@
 <template>
-    <div id="photos">
-        <div class="my-columns"  >
+    <div id="photos" >
+        <div v-if="showUserPhotos" class="my-columns"  >
           <div v-for="(photo, index) in albumPhotos"
                 v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
                 @click='photoSelected(photo)'>
               <div class="card-image">
-                <figure class="image is-4by3">
+                <figure class="image is-square">
                   <img :src="photo.url" alt="Image">
                 </figure>
               </div>
@@ -26,18 +26,27 @@
     props: ['albumPhotos', 'isMobile'],
     data() {
         return {
+          photo: {},
+          showUserPhotos: false
         }
     },
     components: {
     },
     methods: {
-      photoSelected(id){
-        console.log(id)
+      photoSelected(photo){
+        this.photo = photo;
+        this.showUserPhotos = false
+        this.$emit('photoSelected', this.photo)
       }
     },
     watch: {
+      // mobileAlbumSelect: function (val){
+      //   this.albumSelected(val.album.id, val.index)
+      // },
+      albumPhotos: function (val){
+        this.showUserPhotos = true;
+      }
     }
-
   }
 </script>
 

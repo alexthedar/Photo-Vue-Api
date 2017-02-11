@@ -1,5 +1,5 @@
 <template>
-  <div id="albums">
+  <div id="albums" >
 
     <div v-if="showUserAlbums">
 
@@ -8,7 +8,7 @@
             v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
             @click='albumSelected(album.id, index)'>
           <div class="card-image">
-            <figure class="image is-4by3">
+            <figure class="image is-square">
               <img :src="coverPhoto(album.id)" alt="Image">
             </figure>
           </div>
@@ -59,7 +59,6 @@ export default {
       this.album = this.userAlbums[index]
       var albumPhotos = this.photos[id-1].photos
       this.showUserAlbums = false;
-      console.log(this.showUserAlbums)
       this.$emit('albumChanged', albumPhotos)
       this.$emit('albumSelected', this.album)
     },
