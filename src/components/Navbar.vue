@@ -2,21 +2,9 @@
   <div>
     <nav class="nav has-shadow is-fixed-top">
       <div class="container">
+
+        <!-- Desktop users  -->
         <div class="nav-left">
-          <!-- TODO: fix album title to display with word wrap -->
-          <!-- <a class="nav-item">
-            <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo">
-            <p v-if="user" id="nav-user-brand" >
-              <strong>User:&nbsp;</strong><span> {{user}}</span>
-            </p>
-          </a>
-          <div class="nav-item">
-            <p v-if="hasAlbum && !isMobile"  >
-              <strong>&nbsp;&nbsp;Album:&nbsp;</strong>
-              <span> {{album.title}}</span>
-            </p>
-          </div> -->
-          <!-- Desktop users -->
           <p class="nav-item is-tab is-unselectable is-hidden-mobile">
             <span v-if="!isMobile" class="title">Users</span>
             <i v-if="isMobile" class="icon fa fa-users" aria-hidden="true"></i>
@@ -26,48 +14,53 @@
               <a class="">{{user.user}}</a>
             </div>
           </a>
-          <!-- Navbar break icon -->
-          <span class=" is-unselectable is-hidden-mobile">
-            <span class="icon is-large " aria-hidden="true">|</span>
-          </span>
         </div>
+        <!-- End Desktop users  -->
 
-        <!-- Desktop -->
-        <div class="nav-right">
-
-          <!-- desktop photo -->
-          <div @click="showPhotos" v-if=" hasPhotos  && !isMobile" class="nav-item has-icon">
-            <p class="is-tab is-hidden-mobile">
-              <span v-if="!isMobile" class="title">Photos</span>
-              <i v-if="isMobile" class="fa fa-picture-o" aria-hidden="true"></i>
-            </p>
+        <!-- mobile nav icons -->
+        <div class="nav-center">
+          <!-- users -->
+          <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
+            <i class="icon fa fa-users" aria-hidden="true"></i>
           </div>
 
-          <!-- desktop album -->
+          <!-- album -->
+          <div v-if="isMobile && hasAlbum" @click="showAlbums" class="nav-item has-icon">
+            <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+          </div>
+
+          <!-- photos -->
+          <div v-if="isMobile && hasPhotos" @click="showPhotos" class="nav-item has-icon">
+            <i class="icon fa fa-picture-o" aria-hidden="true"></i>
+          </div>
+        </div>
+        <!-- end mobile nav icons -->
+
+        <!-- Desktop Album & Photos icons -->
+        <div class="nav-right">
+
+          <!-- desktop album icon-->
           <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
             <span v-if="!isMobile" class="title">Albums</span>
             <img v-if="isMobile" class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
-
           </div>
 
           <!-- Navbar break icon -->
-          <span class=" is-unselectable is-hidden-mobile">
+          <span v-if=" hasPhotos  && !isMobile" class=" is-unselectable is-hidden-mobile">
             <span class="icon is-large " aria-hidden="true">|</span>
           </span>
 
+          <!-- desktop photo icon -->
+          <div @click="showPhotos" v-if=" hasPhotos  && !isMobile" class="nav-item has-icon">
+            <p class="is-tab is-hidden-mobile">
+              <span v-if="!isMobile" class="title">Photos</span>
+            </p>
+          </div>
 
         </div>
+        <!-- End Desktop Album & Photos icons -->
 
-        <!-- left nav icons -->
-        <div v-if="isMobile && hasAlbum" @click="showAlbums" class="nav-item has-icon">
-          <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
-        </div>
-        <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
-          <span class="icon is-medium " aria-hidden="true">|</span>
-
-          <i class="icon fa fa-users" aria-hidden="true"></i>
-        </div>
-
+        <!-- Mobile DropDown Menus (in navbar)-->
         <!-- User Mobile dropdown -->
         <div v-if="isMobile" v-bind:class="{'is-active': userMenu }"
             class=" nav-menu ">
@@ -90,20 +83,21 @@
           </div>
 
         <!-- photos mobile dropdown -->
-          <div  v-if="isMobile" v-bind:class="{'is-active': photoMenu }"
+          <!-- <div  v-if="isMobile" v-bind:class="{'is-active': photoMenu }"
               class=" nav-menu ">
             <div class="title has-text-centered">{{album.title}}</div>
             <div class="has-text-left nav-item  is-hidden-tablet">
               lksjdlasjdlaks
             </div>
-          </div>
+          </div> -->
+          <!-- End Mobile DropDown Menus (in navbar)-->
 
           <!-- end container -->
       </div>
-
-
+      <!-- end navbar -->
     </nav>
 
+    <!-- Desktop Dropdown Menus (below navbar)-->
     <!-- desktop album dropdown items -->
     <div  v-if="albumMenu && !isMobile" v-bind:class="{'is-active': albumMenu }"
         class=" nav-menu fixed-navbar-adjust"
@@ -114,7 +108,6 @@
         {{album.title}}
       </div>
     </div>
-
 
     <!-- desktop photo dropdown items -->
     <!-- <div  v-if="photoMenu && !isMobile"
@@ -153,6 +146,10 @@ export default {
     },
     showAlbums(){
       this.albumMenu === false ? this.albumMenu = true : this.albumMenu = false;
+      this.userMenu === true ? this.userMenu = false : this.userMenu = false;
+    },
+    showPhotos(){
+      this.albumMenu === true ? this.albumMenu = false : this.albumMenu = false;
       this.userMenu === true ? this.userMenu = false : this.userMenu = false;
     },
     getUsers() {
