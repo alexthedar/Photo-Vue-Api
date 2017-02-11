@@ -29,7 +29,7 @@
           </div>
 
           <!-- photos -->
-          <div v-if="isMobile && hasPhoto" @click="showPhotos" class="nav-item has-icon">
+          <div v-if="isMobile && hasPhotos" @click="showPhotos" class="nav-item has-icon">
             <i class="icon fa fa-picture-o" aria-hidden="true"></i>
           </div>
         </div>
@@ -37,7 +37,6 @@
 
         <!-- Desktop Album & Photos icons -->
         <div class="nav-right">
-          {{hasPhoto}}
 
           <!-- desktop album icon-->
           <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
@@ -46,12 +45,12 @@
           </div>
 
           <!-- Navbar break icon -->
-          <span v-if=" hasPhoto  && !isMobile" class=" is-unselectable is-hidden-mobile">
+          <span v-if=" hasPhotos  && !isMobile" class=" is-unselectable is-hidden-mobile">
             <span class="icon is-large " aria-hidden="true">|</span>
           </span>
 
           <!-- desktop photo icon -->
-          <div @click="showPhotos" v-if=" hasPhoto  && !isMobile" class="nav-item has-icon">
+          <div @click="showPhotos" v-if=" hasPhotos  && !isMobile" class="nav-item has-icon">
             <p class="is-tab is-hidden-mobile">
               <span v-if="!isMobile" class="title">Photos</span>
             </p>
@@ -60,7 +59,7 @@
         </div>
         <!-- End Desktop Album & Photos icons -->
 
-        <!-- User Mobile dropdown  -->
+        <!-- User  dropdown  -->
         <div v-if=" isMobile" v-bind:class="{'is-active': userMenu }"
               class=" dropdown-menu nav-menu is-active   ">
           <div @click='userSelected(user.user)'
@@ -73,10 +72,10 @@
         <!-- end container -->
       </div>
 
-        <!-- albums mobile dropdown -->
+        <!-- albums  dropdown -->
           <nav v-if="albumMenu" v-bind:class="{'is-active': albumMenu }"
               class=" dropdown-menu nav-menu is-active  fixed-navbar-adjust">
-            <div class=" has-text-centered dropdown-menu-header ">
+            <div class=" has-text-centered dropdown-menu-header is-fullwidth">
               User <span>{{user}}</span> Albums
             </div>
             <div v-for="(album, index) in userAlbums"
@@ -85,6 +84,21 @@
               {{album.title}}
             </div>
           </nav>
+
+
+          <div v-if="photoMenu" v-bind:class="{'is-active': photoMenu }"
+                class="  header-adjust  fixed-navbar-adjust">
+            <div class=" has-text-centered dropdown-menu-header is-fullwidth">
+              Album: <span>{{album.title}}</span>
+            </div>
+            <div v-for="(photo, index) in albumPhotos"
+                  @click="dropdownPhotoSelect(photo, index)">
+            <div class="has-text-centered  dropdown-menu-items  is-fullwidth">
+              {{photo.title}}
+            </div>
+            </div>
+          </div>
+
       <!-- end navbar -->
     </nav>
   </div>
@@ -100,27 +114,33 @@ export default {
     return {
       userMenu: false,
       albumMenu: false,
-      photoMenu: true,
+      photoMenu: false,
       users: [],
       user: '',
       userAlbums:[],
       hasAlbum: false,
-      hasPhoto: false,
-      photoObj: {}
+      hasPhotos: false,
+      photoObj: {},
+      albumPhotos: []
     }
   },
   methods: {
     showUsers(){
       this.userMenu === false ? this.userMenu = true : this.userMenu = false;
-      this.albumMenu === true ? this.albumMenu = false : this.albumMenu = false;
+      this.albumMenu = false;
+      this.photoMenu = false;
     },
     showAlbums(){
       this.albumMenu === false ? this.albumMenu = true : this.albumMenu = false;
-      this.userMenu === true ? this.userMenu = false : this.userMenu = false;
+      this.userMenu = false;
+      this.photoMenu = false;
     },
     showPhotos(){
-      this.albumMenu === true ? this.albumMenu = false : this.albumMenu = false;
-      this.userMenu === true ? this.userMenu = false : this.userMenu = false;
+      this.albumMenu = false;
+      this.userMenu = false;
+      this.photoMenu === false ? this.photoMenu = true : this.photoMenu = false;
+      // TODO: remove element when photo drop down comes not working
+      this.$emit('photoDropdown', !this.photoMenu)
     },
     getUsers() {
       axios.get('https://jsonplaceholder.typicode.com/albums')
@@ -136,19 +156,23 @@ export default {
     userSelected(id){
       this.user = id
       this.userAlbums = this.users[id-1].albums
-      this.albumMenu = false
-      this.userMenu === false ? this.userMenu = true : this.userMenu = false;
-      this.hasAlbum = false
+      this.hasAlbum = true
       this.$emit('userChanged', this.userAlbums)
+      this.showUsers()
     },
     dropdownAlbumSelect(album, index){
-      this.albumMenu = false
-      this.userMenu = false
+      this.hasPhotos = true
       album = {index: index, album: album}
       this.$emit('newAlbum', album)
+      this.showAlbums()
+    },
+    dropdownPhotoSelect(photo, index){
+      this.albumMenu = false
+      this.userMenu = false
+      this.$emit('newPhoto', photo)
+      this.showPhotos()
     },
     albumSelected(album){
-      console.log('nav', album)
       this.hasAlbum = _.values(album).some(x => x !== undefined); // true
     }
   },
@@ -166,7 +190,8 @@ export default {
       this.userMenu === false
     },
     photo: function (val){
-      this.hasPhoto = true
+      this.hasPhotos = true
+      this.albumPhotos = val.photos
       this.photoObj = val
     }
   }
@@ -188,8 +213,10 @@ export default {
   border-top: 1px solid #ccc;
 }
 .dropdown-menu-header {
+  width: 100%;
   font-size: 200%;
   background: #ccc;
+
 }
 .dropdown-menu-header span {
   color: red;
@@ -212,4 +239,5 @@ nav {
   color: #00d1b2;
 
 }
+
 </style>

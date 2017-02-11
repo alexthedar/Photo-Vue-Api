@@ -1,5 +1,6 @@
 <template>
     <div id="photos" class="fixed-navbar-adjust">
+
         <div v-if="showUserPhotos" class="my-columns"  >
           <div v-for="(photo, index) in albumPhotos"
                 v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"
@@ -23,7 +24,7 @@
 
   export default {
     name: 'photos',
-    props: ['albumPhotos', 'isMobile'],
+    props: ['albumPhotos', 'isMobile', 'showMenu'],
     data() {
         return {
           photo: {},
@@ -35,14 +36,18 @@
     methods: {
       photoSelected(photo){
         this.photo = photo;
+        var photoObj = {
+          photo: photo,
+          photos: this.albumPhotos
+        }
         this.showUserPhotos = false
-        this.$emit('photoSelected', this.photo)
+        this.$emit('photoSelected', photoObj)
       }
     },
     watch: {
-      // mobileAlbumSelect: function (val){
-      //   this.albumSelected(val.album.id, val.index)
-      // },
+      showMenu: function (val){
+        this.showUserPhotos = val
+      },
       albumPhotos: function (val){
         this.showUserPhotos = true;
       }

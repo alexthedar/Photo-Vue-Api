@@ -11,7 +11,8 @@
             v-on:photoSelected="photoSelected">
     </Photos >
     <Photo v-bind:isMobile="isMobile"
-            v-bind:photoObj="photoObj">
+            v-bind:showMenu="showMenu"
+            v-bind:photoObj="photo">
     </Photo>
   </div>
 </template>
@@ -23,11 +24,12 @@ import Photo from './Photo.vue'
 
 export default {
   name: 'app',
-  props: ['userAlbums', 'isMobile', 'mobileAlbumSelect'],
+  props: ['userAlbums', 'isMobile', 'mobileAlbumSelect', 'photoChanged', 'photoMenuBool'],
   data () {
     return {
       albumPhotos:[],
-      photoObj:{}
+      photo:{},
+      showMenu: true
     }
   },
   components: {
@@ -42,18 +44,32 @@ export default {
     albumSelected: function (album) {
       this.$emit('albumSelected', album)
     },
-    photoSelected: function (photo) {
-      this.photoObj = photo
-      // console.log(this.photoObj)
-      this.$emit('photoSelected', photo)
+    photoSelected: function (photoObj) {
+      this.photo = photoObj.photo
+      this.$emit('photoSelected', photoObj)
+    },
+    updatePhoto: function (photo){
+      this.photo = photo
+    },
+    updateShowMenu: function(bool){
+      this.showMenu = bool
     }
   },
   created: function () {
-    console.log(this.mobileAlbumSelect)
+    this.updatePhoto(this.photoChanged.photo)
+    this.updateShowMenu(this.photoMenuBool)
   },
   watch: {
     mobileAlbumSelect: function (val){
-      console.log('mobilealbumselected', val)
+    },
+    albumChanged: function (val){
+      this.albumPhotos = val
+    },
+    photoChanged: function (val){
+      this.updatePhoto(val)
+    },
+    photoMenuBool: function(val){
+      this.updateShowMenu(val)
     }
   }
 }

@@ -69,14 +69,17 @@ export default {
   },
   created() {
     this.getPhotos()
-    console.log(this.mobileAlbumSelect)
   },
   watch: {
     mobileAlbumSelect: function (val){
+      this.showUserAlbums = true
       this.albumSelected(val.album.id, val.index)
     },
     userAlbums: function (val){
       this.showUserAlbums = true;
+    },
+    showMenu: function (val){
+      this.showUserAlbums = val
     }
   }
 }

@@ -4,13 +4,17 @@
             v-on:newAlbum="newAlbum"
             v-bind:isMobile="isMobile"
             v-bind:album="album"
-            v-bind:photo="photo">
+            v-bind:photo="photo"
+            v-on:photoDropdown="photoDropdown"
+            v-on:newPhoto="newPhoto">
     </Navbar>
     <MainBody v-bind:userAlbums="userAlbums"
               v-bind:isMobile="isMobile"
               v-bind:mobileAlbumSelect="mobileAlbumSelect"
               v-on:albumSelected="albumSelected"
-              v-on:photoSelected="photoSelected">
+              v-on:photoSelected="photoSelected"
+              v-bind:photoChanged="photoChanged"
+              v-bind:photoMenuBool="photoMenuBool">
     </MainBody>
   </div>
 </template>
@@ -32,18 +36,24 @@ export default {
       isMobile: false,
       album: {},
       mobileAlbumSelect:{},
-      photo: {}
+      photo: {},
+      photoChanged: {},
+      photoMenuBool:false
     }
   },
   methods: {
+    newPhoto(photo){
+      this.photoChanged = photo
+    },
+    photoDropdown(bool){
+      this.photoMenuBool = bool
+    },
     newAlbum(mobileAlbum){
       // this.albumSelected(mobileAlbum)
-      console.log('newalbum', mobileAlbum)
       this.mobileAlbumSelect = mobileAlbum
     },
     albumSelected: function (album) {
       this.album = album
-      console.log('albumselected', album)
     },
     userChanged: function (userAlbums) {
       this.userAlbums = userAlbums
@@ -77,13 +87,20 @@ export default {
   },
   created: function(){
     this.screenIsMobile(this.windowWidth);
+    this.photoDropdown(this.photoMenuBool)
   },
   watch: {
     windowWidth: function(val){
       this.screenIsMobile(val);
     },
     mobileAlbumSelected: function (val){
-      this.albumSelected(mobileAlbum)
+      this.albumSelected(val)
+    },
+    albumSelected: function (val){
+      this.album = val
+    },
+    photoDropdown: function (val){
+      this.photoMenuBool = val
     }
   }
 }
