@@ -1,78 +1,83 @@
 <template>
-  <nav class="nav has-shadow">
-    <div class="container">
-      <div class="nav-left">
-        <a class="nav-item">
-          <!-- <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo"> -->
-          <p v-if="user" id="nav-user-brand" >
-            <strong>User:&nbsp;</strong><span> {{user}}</span>
-          </p>
-        </a>
-        <!-- TODO: fix album title to display with word wrap -->
-        <div class="nav-item">
-          <p v-if="hasAlbum"  >
-            <strong>&nbsp;&nbsp;Album:&nbsp;</strong>
-            <span> {{album.title}}</span>
-          </p>
+  <div>
+    <nav class="nav has-shadow">
+      <div class="container">
+        <div class="nav-left">
+          <a class="nav-item">
+            <!-- <img class="image-cropper" src="http://lorempixel.com/400/400/cats/" alt="logo"> -->
+            <p v-if="user" id="nav-user-brand" >
+              <strong>User:&nbsp;</strong><span> {{user}}</span>
+            </p>
+          </a>
+          <!-- TODO: fix album title to display with word wrap -->
+          <div class="nav-item">
+            <p v-if="hasAlbum"  >
+              <strong>&nbsp;&nbsp;Album:&nbsp;</strong>
+              <span> {{album.title}}</span>
+            </p>
+          </div>
         </div>
-      </div>
 
-      <!-- Desktop users -->
-      <div class="nav-right">
-        <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon">
+        <!-- Desktop users -->
+        <div class="nav-right">
+          <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon">
+            <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
+          </div>
+
+          <p class="nav-item is-tab is-unselectable is-hidden-mobile">
+            <i class="icon fa fa-users" aria-hidden="true"></i>
+          </p>
+          <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
+            <div>
+              <a class="">{{user.user}}</a>
+            </div>
+          </a>
+        </div>
+
+        <!-- left nav icons -->
+        <div v-if="isMobile && hasAlbum" @click="showAlbums" class="nav-item has-icon">
           <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
         </div>
-
-        <p class="nav-item is-tab is-unselectable is-hidden-mobile">
+        <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
           <i class="icon fa fa-users" aria-hidden="true"></i>
-        </p>
-        <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
-          <div>
-            <a class="">{{user.user}}</a>
-          </div>
-        </a>
-      </div>
-
-      <!-- left nav icons -->
-      <div v-if="isMobile && hasAlbum" @click="showAlbums" class="nav-item has-icon">
-        <img class="icon is-medium" src="../assets/icons/photo-album.png" alt="logo">
-      </div>
-      <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
-        <i class="icon fa fa-users" aria-hidden="true"></i>
-      </div>
-
-      <!-- User Mobile dropdown -->
-      <div v-bind:class="{'is-active': userMenu }"
-          @click="showUsers"
-          class=" nav-menu ">
-        <div @click='userSelected(user.user)'
-            v-for="(user, index) in users"
-            class="has-text-centered nav-item  is-hidden-tablet">
-          <a class=" ">{{user.user}}</a>
         </div>
-      </div>
 
-        <!-- <div v-bind:class="{'is-active': albumMenu }"
-            @click="showAlbums"
-            class=" is-active nav-menu ">
-          <div v-for="album in userAlbums"
+        <!-- User Mobile dropdown -->
+        <div v-if="isMobile" v-bind:class="{'is-active': userMenu }"
+            class=" nav-menu ">
+          <div @click='userSelected(user.user)'
+              v-for="(user, index) in users"
               class="has-text-centered nav-item  is-hidden-tablet">
-            {{album.title}}
+            <a class="navItem">{{user.user}}</a>
           </div>
-        </div> -->
-        <!-- <div @click='userSelected(user.user)'
-            v-for="(user, index) in users"
-            class="has-text-centered nav-item  is-hidden-tablet">
-          <a class=" ">{{user.user}}</a>
-        </div> -->
+        </div>
 
+          <div  v-bind:class="{'is-active': albumMenu }"
+              class=" nav-menu ">
+            <div v-for="(album, index) in userAlbums"
+                class="has-text-left nav-item  is-hidden-tablet"
+                @click="dropdownAlbumSelect(album)">
+              {{album.title}}
+            </div>
+          </div>
+      </div>
+    </nav>
+
+    <!-- desktop dropdown menu -->
+    <div  v-if="albumMenu && !isMobile" v-bind:class="{'is-active': albumMenu }"
+        class=" nav-menu "
+        id="album-dropdown-menu">
+      <div v-for="(album, index) in userAlbums"
+          class="has-text-left nav-item  desktop-dropdown-album-menu"
+          @click="dropdownAlbumSelect(album)">
+        {{album.title}}
+      </div>
     </div>
-  </nav>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
-console.log('user',this.userMenu, 'album', this.albumMenu)
 
 export default {
   name: 'navbar',
@@ -81,7 +86,6 @@ export default {
     return {
       userMenu: false,
       albumMenu: false,
-      isTest: true,
       users: [],
       user: '',
       userAlbums:[],
@@ -90,19 +94,12 @@ export default {
   },
   methods: {
     showUsers(){
-
-      // this.userMenu = !this.userMenu
       this.userMenu === false ? this.userMenu = true : this.userMenu = false;
       this.albumMenu === true ? this.albumMenu = false : this.albumMenu = false;
-      console.log('user',this.userMenu, 'album', this.albumMenu)
     },
     showAlbums(){
-      // this.userMenu = false
-      // this.albumMenu = !this.albumMenu
       this.albumMenu === false ? this.albumMenu = true : this.albumMenu = false;
       this.userMenu === true ? this.userMenu = false : this.userMenu = false;
-
-      console.log('user',this.userMenu, 'album', this.albumMenu)
     },
     getUsers() {
       axios.get('https://jsonplaceholder.typicode.com/albums')
@@ -116,11 +113,17 @@ export default {
       })
     },
     userSelected(id){
-      this.user === id? this.user = '' : this.user = id;
+      this.user = id
       this.userAlbums = this.users[id-1].albums
       this.albumMenu = false
+      this.userMenu === false ? this.userMenu = true : this.userMenu = false;
       this.hasAlbum = false
       this.$emit('userChanged', this.userAlbums)
+    },
+    dropdownAlbumSelect(album){
+      this.albumMenu = false
+      this.userMenu = false
+      this.$emit('newAlbum', album)
     },
     albumSelected(album){
       this.hasAlbum = _.values(album).some(x => x !== undefined); // true
@@ -148,10 +151,11 @@ export default {
 #nav-user-brand span {
   color: red;
 }
-/*#nav-album {
-  font-size: 80%;
+.desktop-dropdown-album-menu{
+  border-bottom: 1px solid #ccc;
 }
-#nav-album span {
-  color: red;
-}*/
+.desktop-dropdown-album-menu:hover {
+  color: #00d1b2;
+}
+
 </style>

@@ -1,11 +1,13 @@
 <template>
   <div id="app" >
     <Navbar v-on:userChanged="userChanged"
+            v-on:newAlbum="newAlbum"
             v-bind:isMobile="isMobile"
             v-bind:album="album">
     </Navbar>
     <MainBody v-bind:userAlbums="userAlbums"
               v-bind:isMobile="isMobile"
+              v-bind:mobileAlbumSelect="mobileAlbumSelect"
               v-on:albumSelected="albumSelected">
     </MainBody>
   </div>
@@ -26,10 +28,15 @@ export default {
       userAlbums:[],
       windowWidth: 0,
       isMobile: false,
-      album: {}
+      album: {},
+      mobileAlbumSelect:{}
     }
   },
   methods: {
+    newAlbum(mobileAlbum){
+      this.albumSelected(mobileAlbum)
+      this.mobileAlbumSelect = mobileAlbum
+    },
     albumSelected: function (album) {
       this.album = album
     },

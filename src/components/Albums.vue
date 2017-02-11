@@ -1,21 +1,5 @@
 <template>
   <div id="albums">
-    <!-- <header class="nav">
-      <button @click="buttonClick" class=" button is-fullwidth" type="button">
-        Albums
-      </button>
-      <div v-for="(album, index) in userAlbums"
-            @click='albumSelected(album.id, index)'>
-
-      <div class="box dropdown has-text-centered" v-bind:class="{'is-open': toggleDropdown }">
-
-        {{album.title}}
-      </div>
-
-      </div>
-
-
-    </header> -->
 
       <div class="my"  >
         <div v-for="(album, index) in userAlbums"
@@ -23,13 +7,12 @@
               @click='albumSelected(album.id, index)'>
             <div class="card-image">
               <figure class="image is-4by3">
-                <img src="http://placehold.it/600/92c952" alt="Image">
+                <img :src="coverPhoto(album.id)" alt="Image">
               </figure>
             </div>
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  {{album.id}}
                   <p class="title has-text-centered is-5">{{album.title}}</p>
                 </div>
               </div>
@@ -43,14 +26,11 @@
 
 <script>
 import axios from 'axios'
-// const button = document.querySelector('.button');
-// const dropdown = document.querySelector('.dropdown');
-// button.addEventListener('click', () => {
-//   dropdown.classList.toggle('is-open');
-// });
+
+
 export default {
   name: 'albums',
-  props: ['userAlbums', 'isMobile'],
+  props: ['userAlbums', 'isMobile', 'mobileAlbumSelect'],
   components: {
   },
   data: function() {
@@ -72,24 +52,29 @@ export default {
         console.log(err)
       })
     },
-    getRandomPhoto(albumId){
-      // var photos = this.photos[albumId-1].photos
-      Math.floor(Math.random() * 6) + 1
-    },
     albumSelected(id, index){
-      // console.log(id, this.userAlbums[index])
       this.album = this.userAlbums[index]
-      // this.album.id === id? this.album = '' : this.album = id;
       var albumPhotos = this.photos[id-1].photos
       this.$emit('albumChanged', albumPhotos)
       this.$emit('albumSelected', this.album)
     },
     buttonClick (){
       this.toggleDropdown = !this.toggleDropdown
+    },
+    coverPhoto(id){
+      var number = Math.floor(Math.random() * 10) + 0
+      return  this.photos[id-1].photos[number].url
     }
   },
   created() {
     this.getPhotos()
+    console.log()
+  },
+  watch: {
+    mobileAlbumSelect: function (val){
+      var albumPhotos = this.photos[val.id-1].photos
+      this.$emit('albumChanged', albumPhotos)
+    }
   }
 
 }
