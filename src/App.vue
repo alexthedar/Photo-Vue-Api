@@ -37,18 +37,19 @@ export default {
   },
   methods: {
     newAlbum(mobileAlbum){
-      this.albumSelected(mobileAlbum)
+      // this.albumSelected(mobileAlbum)
+      console.log('newalbum', mobileAlbum)
       this.mobileAlbumSelect = mobileAlbum
     },
     albumSelected: function (album) {
       this.album = album
+      console.log('albumselected', album)
     },
     userChanged: function (userAlbums) {
       this.userAlbums = userAlbums
     },
     photoSelected: function (photo) {
       this.photo = photo
-      console.log(this.photo)
     },
     getWindowWidth(event) {
       this.windowWidth = document.documentElement.clientWidth;
@@ -80,6 +81,9 @@ export default {
   watch: {
     windowWidth: function(val){
       this.screenIsMobile(val);
+    },
+    mobileAlbumSelected: function (val){
+      this.albumSelected(mobileAlbum)
     }
   }
 }

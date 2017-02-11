@@ -29,7 +29,7 @@
           </div>
 
           <!-- photos -->
-          <div v-if="isMobile && hasPhotos" @click="showPhotos" class="nav-item has-icon">
+          <div v-if="isMobile && hasPhoto" @click="showPhotos" class="nav-item has-icon">
             <i class="icon fa fa-picture-o" aria-hidden="true"></i>
           </div>
         </div>
@@ -37,6 +37,7 @@
 
         <!-- Desktop Album & Photos icons -->
         <div class="nav-right">
+          {{hasPhoto}}
 
           <!-- desktop album icon-->
           <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
@@ -45,12 +46,12 @@
           </div>
 
           <!-- Navbar break icon -->
-          <span v-if=" hasPhotos  && !isMobile" class=" is-unselectable is-hidden-mobile">
+          <span v-if=" hasPhoto  && !isMobile" class=" is-unselectable is-hidden-mobile">
             <span class="icon is-large " aria-hidden="true">|</span>
           </span>
 
           <!-- desktop photo icon -->
-          <div @click="showPhotos" v-if=" hasPhotos  && !isMobile" class="nav-item has-icon">
+          <div @click="showPhotos" v-if=" hasPhoto  && !isMobile" class="nav-item has-icon">
             <p class="is-tab is-hidden-mobile">
               <span v-if="!isMobile" class="title">Photos</span>
             </p>
@@ -66,7 +67,7 @@
                 v-if="userMenu"
                 v-for="(user, index) in users"
                 class="nav-item  dropdown-menu-items   is-hidden-tablet">
-            <a class="">{{user.user}}</a>
+            <a class="text-color">{{user.user}}</a>
           </div>
         </div>
         <!-- end container -->
@@ -86,7 +87,6 @@
           </nav>
       <!-- end navbar -->
     </nav>
-
   </div>
 </template>
 
@@ -105,7 +105,7 @@ export default {
       user: '',
       userAlbums:[],
       hasAlbum: false,
-      hasPhotos: false,
+      hasPhoto: false,
       photoObj: {}
     }
   },
@@ -148,6 +148,7 @@ export default {
       this.$emit('newAlbum', album)
     },
     albumSelected(album){
+      console.log('nav', album)
       this.hasAlbum = _.values(album).some(x => x !== undefined); // true
     }
   },
@@ -165,6 +166,7 @@ export default {
       this.userMenu === false
     },
     photo: function (val){
+      this.hasPhoto = true
       this.photoObj = val
     }
   }

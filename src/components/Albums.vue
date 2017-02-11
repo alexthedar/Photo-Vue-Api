@@ -69,6 +69,7 @@ export default {
   },
   created() {
     this.getPhotos()
+    console.log(this.mobileAlbumSelect)
   },
   watch: {
     mobileAlbumSelect: function (val){

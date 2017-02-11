@@ -47,6 +47,14 @@ export default {
       // console.log(this.photoObj)
       this.$emit('photoSelected', photo)
     }
+  },
+  created: function () {
+    console.log(this.mobileAlbumSelect)
+  },
+  watch: {
+    mobileAlbumSelect: function (val){
+      console.log('mobilealbumselected', val)
+    }
   }
 }
 </script>
