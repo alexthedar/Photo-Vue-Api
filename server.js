@@ -5,7 +5,7 @@ var path = require('path')
 var serveStatic = require('serve-static')
 var touch = require('touch')
 var app = express()
-var listener = process.env.NODE_PORT || 5000
+var listener = process.env.NODE_PORT || 8000
 
 app.use(serveStatic(path.join(__dirname, 'dist')))
 
