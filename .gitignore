@@ -1,6 +1,5 @@
 ########## prepackaged ##########
 node_modules/
-dist/
 npm-debug.log
 
 ########## Self Dev ##########
