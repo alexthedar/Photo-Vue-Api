@@ -18,6 +18,7 @@
 
         <!-- mobile nav icons -->
         <div class="nav-center">
+
           <!-- users -->
           <div @click="showUsers" v-if="isMobile " class="nav-item has-icon">
             <i class="icon fa fa-users" aria-hidden="true"></i>
@@ -37,7 +38,7 @@
 
         <!-- Desktop Album & Photos icons -->
         <div class="nav-right">
-
+          {{isMobile}}
           <!-- desktop album icon-->
           <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
             <span v-if="!isMobile" class="title">Albums</span>
