@@ -4,11 +4,11 @@
     <nav class="nav has-shadow is-fixed-top">
         <!-- Desktop users  -->
         <div class="nav-left">
-          <p class="nav-item is-tab is-unselectable is-hidden-mobile">
+          <p class="nav-item is-tab is-unselectable">
             <span v-if="!isMobile" class="title">Users</span>
-            <i v-if="isMobile" class="icon fa fa-users" aria-hidden="true"></i>
+            <!-- <i v-if="isMobile" class="icon fa fa-users" aria-hidden="true"></i> -->
           </p>
-          <a @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle is-hidden-mobile">
+          <a v-if="!isMobile" @click='userSelected(user.user)' v-bind:class="{'is-active': user == user.user }" v-for="user in users" class="nav-item is-tab is-toggle ">
             <div>
               <a class="text-color">{{user.user}}</a>
             </div>

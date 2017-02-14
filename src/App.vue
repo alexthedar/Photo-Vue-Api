@@ -71,7 +71,7 @@ export default {
       window.removeEventListener('resize', this.getWindowWidth);
     },
     screenIsMobile (windowWidth){
-      var mq = (window.matchMedia( "(max-width: 768px)" ).matches);
+      var mq = (window.matchMedia( "(max-width: 999px)" ).matches);
       mq === true? this.isMobile = true : this.isMobile = false;
       var device = this.checkDevice()
       device === true? this.isMobile = true : this.isMobile = false;
@@ -81,6 +81,7 @@ export default {
       } else {
         this.isMobile = false
       }
+      console.log(this.isMobile)
     },
     checkDevice(){
       var  deviceCheck = new RegExp('Android|webOS|iPhone|iPad|' +
