@@ -40,3 +40,5 @@ Used bulma for simplicity but I think it might be better to use bootstrap or bou
 - normalize.css [link] (https://necolas.github.io/normalize.css/)
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/)
+
+Currently app crashing on heroku - troubleshooting.
