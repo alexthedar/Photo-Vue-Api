@@ -1,6 +1,6 @@
 <template>
     <div id="photos" class="fixed-navbar-adjust">
-
+      <!-- showUserPhotos: {{showUserPhotos}} -->
         <div v-if="showUserPhotos" class="my-columns"  >
           <div v-for="(photo, index) in albumPhotos"
                 v-bind:class="[isMobile ? 'is-mobile' :  'is-desktop']"

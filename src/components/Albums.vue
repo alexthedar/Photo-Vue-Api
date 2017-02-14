@@ -1,6 +1,6 @@
 <template>
   <div id="albums" class="fixed-navbar-adjust">
-
+<!-- ShowALbums: {{showUserAlbums}} -->
     <div v-if="showUserAlbums">
 
       <div class="my-columns"  >

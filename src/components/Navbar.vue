@@ -169,7 +169,7 @@ export default {
     dropdownPhotoSelect(photo, index){
       this.albumMenu = false
       this.userMenu = false
-      this.$emit('newPhoto', photo)
+      // this.$emit('newPhoto', photo)
       this.showPhotos()
     },
     albumSelected(album){

@@ -41,4 +41,5 @@ Used bulma for simplicity but I think it might be better to use bootstrap or bou
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/)
 
-Currently app crashing on heroku - troubleshooting.
+Currently deployed @ [photo-vue-app] (https://murmuring-caverns-31595.herokuapp.com/)
+-Fixing Album and Photo navbar problem on production
