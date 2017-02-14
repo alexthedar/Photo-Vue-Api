@@ -71,11 +71,15 @@ export default {
       window.removeEventListener('resize', this.getWindowWidth);
     },
     screenIsMobile (windowWidth){
-      if(windowWidth < 768 ){
-        this.isMobile = true
-      } else {
-        this.isMobile = false
-      }
+      var mq = (window.matchMedia( "(max-width: 768px)" ).matches);
+
+      mq === true? this.isMobile = true : this.isMobile = false;
+
+      // if(windowWidth < 768 ){
+      //   this.isMobile = true
+      // } else {
+      //   this.isMobile = false
+      // }
     }
   },
   mounted() {
