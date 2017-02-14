@@ -81,28 +81,13 @@ export default {
       } else {
         this.isMobile = false
       }
-      // if(windowWidth < 768 ){
-      //   this.isMobile = true
-      // } else {
-      //   this.isMobile = false
-      // }
     },
     checkDevice(){
       var  deviceCheck = new RegExp('Android|webOS|iPhone|iPad|' +
                                      'BlackBerry|Windows Phone|'  +
                                      'Opera Mini|IEMobile|Mobile' ,'i');
-    var t =   deviceCheck.test(navigator.userAgent)? true : false;
-// var ua = navigator.userAgent;
-//         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua))
-//            console.log('mobile')
-//
-//         else if(/Chrome/i.test(ua))
-//         console.log('chrome')
-//
-//         else
-//         console.log('other')
+      return deviceCheck.test(navigator.userAgent)? true : false;
     }
-
   },
   mounted() {
     this.$nextTick(function() {

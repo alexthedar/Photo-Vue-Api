@@ -38,7 +38,7 @@
 
         <!-- Desktop Album & Photos icons -->
         <div class="nav-right">
-          {{isMobile}}
+
           <!-- desktop album icon-->
           <div @click="showAlbums" v-if=" hasAlbum  && !isMobile" class="nav-item has-icon is-tab">
             <span v-if="!isMobile" class="title">Albums</span>
