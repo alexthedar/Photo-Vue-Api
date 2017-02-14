@@ -73,8 +73,9 @@ export default {
     screenIsMobile (windowWidth){
       var mq = (window.matchMedia( "(max-width: 999px)" ).matches);
       mq === true? this.isMobile = true : this.isMobile = false;
-      var device = this.checkDevice()
-      device === true? this.isMobile = true : this.isMobile = false;
+      // var device = this.checkDevice()
+      // device === true? this.isMobile = true : this.isMobile = false;
+      var device = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)
 
       if(mq === true || device === true){
         this.isMobile = true
@@ -84,10 +85,13 @@ export default {
       console.log(this.isMobile)
     },
     checkDevice(){
-      var  deviceCheck = new RegExp('Android|webOS|iPhone|iPad|' +
-                                     'BlackBerry|Windows Phone|'  +
-                                     'Opera Mini|IEMobile|Mobile' ,'i');
-      return deviceCheck.test(navigator.userAgent)? true : false;
+    //   var  deviceCheck = new RegExp('Android|webOS|iPhone|iPad|' +
+    //                                  'BlackBerry|Windows Phone|'  +
+    //                                  'Opera Mini|IEMobile|Mobile' ,'i');
+     //
+    //  return deviceCheck.test(navigator.userAgent)? true : false;
+    //   console.log(t)
+     //
     }
   },
   mounted() {
